@@ -9,6 +9,16 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&display=swap" rel="stylesheet" />
 
+  <!-- Google Analytics 4 (GA4) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXXXX"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-XXXXXXXXXX');
+  </script>
+  <!-- End Google Analytics 4 -->
+
   <!-- Meta Pixel Code -->
   <script>
     !function(f,b,e,v,n,t,s)
@@ -690,7 +700,7 @@
 
   <footer>
     <div class="container">
-      <p>© 2026 الشيخ للأنظمة الأمنية والحلول الذكية —  </p>
+      <p>© 2026 الشيخ للأنظمة الأمنية والحلول الذكية </p>
       <p>مصاريف الشحن ثابتة 100 ج.م • طرق الدفع: الدفع عند الاستلام، فودافون كاش، إنستا باي</p>
     </div>
   </footer>
@@ -763,6 +773,20 @@
         });
       }
 
+      if (typeof gtag === 'function') {
+        gtag('event', 'add_to_cart', {
+          currency: 'EGP',
+          value: Number(currentProduct.price) * selectedQty,
+          items: [{
+            item_id: currentProduct.id,
+            item_name: currentProduct.title,
+            item_category: currentProduct.category || '',
+            price: Number(currentProduct.price),
+            quantity: selectedQty
+          }]
+        });
+      }
+
       saveCart();
       if (openDrawerAfter) openCart();
     }
@@ -771,14 +795,30 @@
       if (!currentProduct) return;
       addCurrentProductToCart(false);
       const subtotal = getSubtotal();
+      const total = subtotal + SHIPPING_FEE;
+
       if (typeof fbq === 'function') {
         fbq('track', 'InitiateCheckout', {
           content_ids: [currentProduct.id],
           num_items: getCartCount(),
-          value: subtotal + SHIPPING_FEE,
+          value: total,
           currency: 'EGP'
         });
       }
+
+      if (typeof gtag === 'function') {
+        gtag('event', 'begin_checkout', {
+          currency: 'EGP',
+          value: total,
+          items: cart.map((i) => ({
+            item_id: i.id,
+            item_name: i.title,
+            price: Number(i.price),
+            quantity: i.qty
+          }))
+        });
+      }
+
       cartDrawer.classList.remove('open');
       checkoutModal.classList.add('open');
       overlay.classList.add('open');
@@ -843,6 +883,20 @@
           content_type: 'product',
           value: Number(product.price),
           currency: 'EGP'
+        });
+      }
+
+      if (typeof gtag === 'function') {
+        gtag('event', 'view_item', {
+          currency: 'EGP',
+          value: Number(product.price),
+          items: [{
+            item_id: product.id,
+            item_name: product.title,
+            item_category: product.category || '',
+            price: Number(product.price),
+            quantity: 1
+          }]
         });
       }
 
@@ -930,13 +984,29 @@
     document.getElementById('openCheckoutBtn').addEventListener('click', () => {
       if (!cart.length) return;
       const subtotal = getSubtotal();
+      const total = subtotal + SHIPPING_FEE;
+
       if (typeof fbq === 'function') {
         fbq('track', 'InitiateCheckout', {
           num_items: getCartCount(),
-          value: subtotal + SHIPPING_FEE,
+          value: total,
           currency: 'EGP'
         });
       }
+
+      if (typeof gtag === 'function') {
+        gtag('event', 'begin_checkout', {
+          currency: 'EGP',
+          value: total,
+          items: cart.map((i) => ({
+            item_id: i.id,
+            item_name: i.title,
+            price: Number(i.price),
+            quantity: i.qty
+          }))
+        });
+      }
+
       cartDrawer.classList.remove('open');
       checkoutModal.classList.add('open');
       overlay.classList.add('open');
@@ -955,6 +1025,7 @@
 
       const subtotal = getSubtotal();
       const total = subtotal + SHIPPING_FEE;
+      const transactionId = `ELSHEIKH-${Date.now()}`;
 
       if (typeof fbq === 'function') {
         fbq('track', 'Purchase', {
@@ -962,6 +1033,21 @@
           num_items: getCartCount(),
           value: total,
           currency: 'EGP'
+        });
+      }
+
+      if (typeof gtag === 'function') {
+        gtag('event', 'purchase', {
+          transaction_id: transactionId,
+          currency: 'EGP',
+          value: total,
+          shipping: SHIPPING_FEE,
+          items: cart.map((i) => ({
+            item_id: i.id,
+            item_name: i.title,
+            price: Number(i.price),
+            quantity: i.qty
+          }))
         });
       }
 
