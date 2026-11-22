@@ -586,45 +586,29 @@
 
       const specsEntries = product.specs && typeof product.specs === 'object' ? Object.entries(product.specs) : [];
 
-      const rawVideoCell = String(product.video_url || '').trim();
-      const videoList = rawVideoCell
-        ? rawVideoCell.split(/[\n,]+/).map(u => u.trim()).filter(Boolean)
-        : [];
+      const productVideoUrl = product.video_url || '';
+      const embedUrl = getYoutubeEmbedUrl(productVideoUrl);
+      const externalWatchUrl = getExternalVideoWatchUrl(productVideoUrl);
 
-      const videoCardsHtml = videoList
-        .map((rawUrl, index) => {
-          const embedUrl = getYoutubeEmbedUrl(rawUrl);
-          if (!embedUrl) return '';
-          return `
-            <div class="video-frame-wrap" style="margin-top:${index === 0 ? '8px' : '12px'};">
-              <iframe
-                src="${embedUrl}"
-                title="فيديو المنتج ${index + 1}"
-                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-                referrerpolicy="strict-origin-when-cross-origin"
-                allowfullscreen>
-              </iframe>
-            </div>
-          `;
-        })
-        .filter(Boolean)
-        .join('');
-
-      const videoBlockHtml = videoCardsHtml
+      const videoBlockHtml = productVideoUrl
         ? `
           <div class="video-section">
             <div style="font-weight:800; color:var(--primary-dark); margin-bottom:6px;">فيديو المنتج</div>
-            ${videoCardsHtml}
+            <a class="btn btn-primary" href="${externalWatchUrl}" target="_blank" rel="noopener noreferrer">
+              مشاهدة الفيديو عبر الرابط الخارجي
+            </a>
+            ${embedUrl ? `
+              <div class="video-frame-wrap">
+                <iframe
+                  src="${embedUrl}"
+                  title="فيديو المنتج"
+                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                  referrerpolicy="strict-origin-when-cross-origin"
+                  allowfullscreen>
+                </iframe>
+              </div>
+            ` : ''}
           </div>
-        `
-        : `
-          <div class="video-section">
-            <div style="font-weight:800; color:var(--primary-dark);">فيديو المنتج</div>
-            <div style="font-size:0.85rem; color:var(--muted); margin-top:4px;">
-              سيتم إضافة رابط الفيديو الخاص بهذا المنتج قريباً.
-            </div>
-          </div>
-        `;
         `
         : `
           <div class="video-section">
