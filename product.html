@@ -123,6 +123,7 @@
     }
 
     .main-img-box {
+      position: relative;
       background: #f8fafc;
       border: 1px solid var(--border);
       border-radius: 14px;
@@ -131,12 +132,34 @@
       align-items: center;
       justify-content: center;
       padding: 16px;
+      overflow: hidden;
+      cursor: zoom-in;
     }
 
     .main-img-box img {
       max-width: 100%;
       max-height: 100%;
       object-fit: contain;
+      transition: transform 0.12s ease-out;
+      transform-origin: center center;
+      user-select: none;
+    }
+
+    .main-img-box.zoomed img {
+      transform: scale(2.1);
+    }
+
+    .zoom-hint {
+      position: absolute;
+      bottom: 10px;
+      left: 10px;
+      background: rgba(9, 25, 46, 0.78);
+      color: #fff;
+      font-size: 0.76rem;
+      font-weight: 700;
+      padding: 4px 10px;
+      border-radius: 999px;
+      pointer-events: none;
     }
 
     .thumbs-grid {
@@ -156,6 +179,7 @@
       display: flex;
       align-items: center;
       justify-content: center;
+      transition: border-color 0.12s ease;
     }
 
     .thumb-btn.active { border-color: var(--accent); }
@@ -163,6 +187,50 @@
       max-width: 100%;
       max-height: 100%;
       object-fit: contain;
+    }
+
+    .lightbox-modal {
+      position: fixed;
+      inset: 0;
+      background: rgba(9, 25, 46, 0.88);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      z-index: 90;
+    }
+
+    .lightbox-modal.open { display: flex; }
+
+    .lightbox-box {
+      position: relative;
+      background: #fff;
+      border-radius: 16px;
+      max-width: 820px;
+      width: 100%;
+      padding: 18px;
+      text-align: center;
+    }
+
+    .lightbox-close {
+      position: absolute;
+      top: 12px;
+      left: 12px;
+      width: 36px;
+      height: 36px;
+      border-radius: 10px;
+      border: none;
+      background: #0f172a;
+      color: #fff;
+      font-weight: 800;
+      cursor: pointer;
+    }
+
+    .lightbox-box img {
+      max-width: 100%;
+      max-height: 70vh;
+      object-fit: contain;
+      border-radius: 10px;
     }
 
     .video-section {
@@ -301,6 +369,13 @@
     <div id="productContainer">جاري تحميل بيانات المنتج...</div>
   </main>
 
+  <div id="lightboxModal" class="lightbox-modal" aria-hidden="true">
+    <div class="lightbox-box">
+      <button type="button" class="lightbox-close" id="closeLightboxBtn">✕</button>
+      <img id="lightboxImg" src="" alt="تكبير صورة المنتج" />
+    </div>
+  </div>
+
   <footer>
     الشيخ للأنظمة الأمنية والحلول الذكية • مصر • elsheikh.systems.eg@gmail.com
   </footer>
@@ -415,15 +490,29 @@
       return Array.isArray(data) ? data : (data.products || []);
     }
 
-    function getYoutubeEmbedUrl(rawUrl) {
+    function extractYoutubeId(rawUrl) {
       if (!rawUrl) return '';
       const trimmed = String(rawUrl).trim();
+      const embedMatch = trimmed.match(/youtube\.com\/embed\/([A-Za-z0-9_-]+)/);
+      if (embedMatch) return embedMatch[1];
       const shortMatch = trimmed.match(/youtu\.be\/([A-Za-z0-9_-]+)/);
-      if (shortMatch) return `https://www.youtube.com/embed/${shortMatch[1]}`;
+      if (shortMatch) return shortMatch[1];
       const watchMatch = trimmed.match(/[?&]v=([A-Za-z0-9_-]+)/);
-      if (watchMatch) return `https://www.youtube.com/embed/${watchMatch[1]}`;
-      if (trimmed.includes('/embed/')) return trimmed;
+      if (watchMatch) return watchMatch[1];
       return '';
+    }
+
+    function getYoutubeEmbedUrl(rawUrl) {
+      const vid = extractYoutubeId(rawUrl);
+      if (vid) return `https://www.youtube.com/embed/${vid}`;
+      if (rawUrl && String(rawUrl).includes('/embed/')) return String(rawUrl).trim();
+      return '';
+    }
+
+    function getExternalVideoWatchUrl(rawUrl) {
+      const vid = extractYoutubeId(rawUrl);
+      if (vid) return `https://www.youtube.com/watch?v=${vid}`;
+      return String(rawUrl || '').trim();
     }
 
     function buildFourPlusImages(product) {
@@ -490,17 +579,22 @@
       document.title = `${product.title} | الشيخ للأنظمة الأمنية والحلول الذكية`;
 
       const galleryImgs = buildFourPlusImages(product);
+      galleryImgs.forEach((src) => {
+        const pre = new Image();
+        pre.src = src;
+      });
+
       const specsEntries = product.specs && typeof product.specs === 'object' ? Object.entries(product.specs) : [];
 
-      /* ضع رابط الفيديو الخاص بالمنتج هنا في عمود video_url بجدول Google Sheets أو في products.json */
       const productVideoUrl = product.video_url || '';
       const embedUrl = getYoutubeEmbedUrl(productVideoUrl);
+      const externalWatchUrl = getExternalVideoWatchUrl(productVideoUrl);
 
       const videoBlockHtml = productVideoUrl
         ? `
           <div class="video-section">
             <div style="font-weight:800; color:var(--primary-dark); margin-bottom:6px;">فيديو المنتج</div>
-            <a class="btn btn-primary" href="${productVideoUrl}" target="_blank" rel="noopener noreferrer">
+            <a class="btn btn-primary" href="${externalWatchUrl}" target="_blank" rel="noopener noreferrer">
               مشاهدة الفيديو عبر الرابط الخارجي
             </a>
             ${embedUrl ? `
@@ -520,7 +614,6 @@
           <div class="video-section">
             <div style="font-weight:800; color:var(--primary-dark);">فيديو المنتج</div>
             <div style="font-size:0.85rem; color:var(--muted); margin-top:4px;">
-              <!-- ضع رابط الفيديو الخاص بالمنتج هنا في عمود video_url بجدول Google Sheets -->
               سيتم إضافة رابط الفيديو الخاص بهذا المنتج قريباً.
             </div>
           </div>
@@ -533,8 +626,9 @@
       document.getElementById('productContainer').innerHTML = `
         <section class="product-layout">
           <div>
-            <div class="main-img-box">
+            <div class="main-img-box" id="mainImgBox" title="حرّك للتقريب أو اضغط للتكبير الكامل">
               <img id="mainImg" src="${galleryImgs[0]}" alt="${product.title}" onerror="this.src='images/logo.png'" />
+              <span class="zoom-hint">مرّر للتقريب • اضغط للتكبير</span>
             </div>
 
             <div class="thumbs-grid" id="thumbsGrid">
@@ -600,14 +694,50 @@
         addProductToCart(product, qty);
       });
 
+      const mainImgBox = document.getElementById('mainImgBox');
       const mainImg = document.getElementById('mainImg');
       const thumbBtns = document.querySelectorAll('.thumb-btn');
+      const lightboxModal = document.getElementById('lightboxModal');
+      const lightboxImg = document.getElementById('lightboxImg');
+      const closeLightboxBtn = document.getElementById('closeLightboxBtn');
+
       thumbBtns.forEach(btn => {
-        btn.addEventListener('click', () => {
-          mainImg.src = btn.dataset.src;
+        const switchHandler = () => {
+          const nextSrc = btn.dataset.src;
+          if (mainImg.getAttribute('src') !== nextSrc) {
+            mainImg.setAttribute('src', nextSrc);
+          }
           thumbBtns.forEach(b => b.classList.remove('active'));
           btn.classList.add('active');
-        });
+        };
+        btn.addEventListener('mouseenter', switchHandler);
+        btn.addEventListener('click', switchHandler);
+      });
+
+      mainImgBox.addEventListener('mousemove', (e) => {
+        const rect = mainImgBox.getBoundingClientRect();
+        const xPct = ((e.clientX - rect.left) / rect.width) * 100;
+        const yPct = ((e.clientY - rect.top) / rect.height) * 100;
+        mainImg.style.transformOrigin = `${xPct}% ${yPct}%`;
+        mainImgBox.classList.add('zoomed');
+      });
+
+      mainImgBox.addEventListener('mouseleave', () => {
+        mainImgBox.classList.remove('zoomed');
+        mainImg.style.transformOrigin = 'center center';
+      });
+
+      mainImgBox.addEventListener('click', () => {
+        lightboxImg.src = mainImg.getAttribute('src');
+        lightboxModal.classList.add('open');
+      });
+
+      closeLightboxBtn.addEventListener('click', () => {
+        lightboxModal.classList.remove('open');
+      });
+
+      lightboxModal.addEventListener('click', (e) => {
+        if (e.target === lightboxModal) lightboxModal.classList.remove('open');
       });
 
       if (typeof gtag === 'function') {
