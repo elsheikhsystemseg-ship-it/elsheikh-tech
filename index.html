@@ -48,6 +48,8 @@
       --muted: #64748b;
       --border: #e2e8f0;
       --success: #15803d;
+      --wa-green: #25d366;
+      --wa-green-dark: #1ebe5d;
     }
 
     * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -57,6 +59,7 @@
       background: var(--bg);
       color: var(--text);
       line-height: 1.65;
+      padding-bottom: 30px;
     }
 
     a { text-decoration: none; color: inherit; }
@@ -84,14 +87,7 @@
       flex-wrap: wrap;
     }
 
-    .top-bar-links {
-      display: flex;
-      align-items: center;
-      gap: 14px;
-      flex-wrap: wrap;
-    }
-
-    .top-bar-links a:hover { color: #fbbf24; }
+    .top-bar a:hover { color: #fbbf24; }
 
     /* Main Header */
     header {
@@ -140,7 +136,7 @@
 
     .search-wrap {
       flex: 1 1 320px;
-      max-width: 520px;
+      max-width: 540px;
       display: flex;
       background: #fff;
       border-radius: 10px;
@@ -239,7 +235,7 @@
       color: #fff;
     }
 
-    /* Hero Slider / Main Banner */
+    /* Hero Banner */
     .hero-box {
       margin: 18px 0;
       background: linear-gradient(125deg, #09192e 0%, #0f294a 55%, #1e3a8a 100%);
@@ -274,11 +270,11 @@
     .hero-box p {
       color: #dbeafe;
       font-size: 0.92rem;
-      max-width: 660px;
+      max-width: 680px;
     }
 
-    /* Brands Strip */
-    .brands-section {
+    /* Categories Quick Browse Bar */
+    .categories-bar-box {
       background: var(--card);
       border: 1px solid var(--border);
       border-radius: 14px;
@@ -303,38 +299,35 @@
       padding-right: 10px;
     }
 
-    .brands-row {
+    .cat-chips-row {
       display: flex;
       gap: 10px;
-      overflow-x: auto;
-      padding-bottom: 4px;
+      flex-wrap: wrap;
     }
 
-    .brand-chip {
-      min-width: 112px;
-      padding: 10px 14px;
+    .cat-chip {
+      padding: 9px 16px;
       border-radius: 10px;
       border: 1px solid var(--border);
       background: #f8fafc;
       font-family: inherit;
       font-weight: 800;
-      font-size: 0.86rem;
+      font-size: 0.88rem;
       color: var(--primary-dark);
       cursor: pointer;
-      text-align: center;
       transition: 0.18s ease;
     }
 
-    .brand-chip:hover,
-    .brand-chip.active {
+    .cat-chip:hover,
+    .cat-chip.active {
       border-color: var(--accent);
-      background: #fffbeb;
-      color: #92400e;
+      background: var(--accent);
+      color: #fff;
     }
 
-    /* Category Section Blocks (Microtech Style) */
+    /* Category Section Blocks */
     .store-section {
-      margin-bottom: 26px;
+      margin-bottom: 28px;
     }
 
     .products-row {
@@ -366,7 +359,6 @@
       background: #f8fafc;
       padding: 12px;
       border-bottom: 1px solid var(--border);
-      position: relative;
     }
 
     .product-thumb img {
@@ -383,7 +375,7 @@
       gap: 6px;
     }
 
-    .vendor-label {
+    .cat-badge {
       font-size: 0.76rem;
       color: var(--muted);
       font-weight: 700;
@@ -445,6 +437,37 @@
     .promo-strip p {
       font-size: 0.88rem;
       color: #f1f5f9;
+    }
+
+    /* Floating WhatsApp Button (Bottom Right, No Visible Number) */
+    .floating-wa {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      z-index: 65;
+      background: var(--wa-green);
+      color: #fff;
+      border-radius: 999px;
+      padding: 11px 18px;
+      display: inline-flex;
+      align-items: center;
+      gap: 9px;
+      font-weight: 800;
+      font-size: 0.9rem;
+      box-shadow: 0 8px 22px rgba(22, 163, 74, 0.35);
+      transition: transform 0.2s ease, background 0.2s ease;
+    }
+
+    .floating-wa:hover {
+      background: var(--wa-green-dark);
+      transform: translateY(-2px);
+    }
+
+    .floating-wa svg {
+      width: 22px;
+      height: 22px;
+      fill: currentColor;
+      flex-shrink: 0;
     }
 
     /* Cart Overlay */
@@ -538,7 +561,7 @@
       background: var(--primary-dark);
       color: #cbd5e1;
       margin-top: 34px;
-      padding: 28px 0 18px;
+      padding: 28px 0 24px;
     }
 
     .footer-grid {
@@ -562,6 +585,7 @@
     }
 
     .footer-list li { margin-bottom: 6px; }
+    .footer-list a:hover { color: #fbbf24; }
 
     .copyright {
       text-align: center;
@@ -576,10 +600,7 @@
   <div class="top-bar">
     <div class="container top-bar-inner">
       <div>الشحن لجميع محافظات مصر بتكلفة ثابتة <strong>100 ج.م</strong> • العملة: <strong>EGP</strong></div>
-      <div class="top-bar-links">
-        <a href="https://wa.me/201012033762" target="_blank" rel="noopener noreferrer">خدمة العملاء وواتساب: 01012033762</a>
-        <a href="https://wa.me/201012033762?text=%D8%A7%D9%84%D8%B3%D9%84%D8%A7%D9%85%20%D8%B9%D9%84%D9%8A%D9%83%D9%85%D8%8C%20%D8%A3%D8%B3%D8%AA%D9%81%D8%B3%D8%B1%20%D8%B9%D9%86%20%D8%B7%D9%84%D8%A8%D8%A7%D8%AA%20%D8%A7%D9%84%D8%AC%D9%85%D9%84%D8%A9" target="_blank" rel="noopener noreferrer">طلبات الجملة عبر واتساب</a>
-      </div>
+      <div>للتواصل: <a href="mailto:elsheikh.systems.eg@gmail.com">elsheikh.systems.eg@gmail.com</a></div>
     </div>
   </div>
 
@@ -600,19 +621,12 @@
       </div>
 
       <div class="header-tools">
-        <a class="btn btn-outline" href="https://wa.me/201012033762" target="_blank" rel="noopener noreferrer">واتساب: 01012033762</a>
         <button id="openCartBtn" class="btn btn-accent" type="button">السلة (<span id="cartBadge">0</span>)</button>
       </div>
     </div>
 
     <nav class="cat-nav">
-      <div class="container cat-nav-list" id="topNavCategories">
-        <button type="button" class="nav-pill active" data-filter="ALL">الصفحة الرئيسية</button>
-        <button type="button" class="nav-pill" data-filter="الحلول الذكية">الحلول الذكية</button>
-        <button type="button" class="nav-pill" data-filter="أنظمة الأمن">أنظمة الأمن</button>
-        <button type="button" class="nav-pill" data-filter="أجهزة الكمبيوتر والشاشات">أجهزة الكمبيوتر والشاشات</button>
-        <button type="button" class="nav-pill" data-filter="ديكور المنزل">ديكور المنزل</button>
-      </div>
+      <div class="container cat-nav-list" id="topNavCategories"></div>
     </nav>
   </header>
 
@@ -623,43 +637,40 @@
         <span class="hero-badge">الشيخ للأنظمة الأمنية والحلول الذكية</span>
         <h1>حلول ذكية، أنظمة أمنية، أجهزة كمبيوتر وشاشات، وديكور المنزل في مصر</h1>
         <p>
-          تسوق أحدث الأجهزة والمنتجات المختارة بعناية مع شحن موحد لجميع محافظات مصر بقيمة 100 ج.م،
-          ولطلبات الجملة تواصل معنا مباشرة عبر واتساب على الرقم 01012033762.
+          تصفح جميع أقسام المتجر ومنتجاتنا المتنوعة في مكان واحد، أو اختر أي قسم بالأعلى لاستعراض منتجاته منفردة
+          مع شحن موحد لجميع محافظات مصر بقيمة 100 ج.م.
         </p>
       </div>
-      <div style="display:flex; gap:10px; flex-wrap:wrap;">
-        <button id="showAllMainBtn" class="btn btn-accent" type="button">عرض كل المنتجات</button>
-        <a class="btn btn-outline" href="https://wa.me/201012033762?text=%D8%A7%D9%84%D8%B3%D9%84%D8%A7%D9%85%20%D8%B9%D9%84%D9%8A%D9%83%D9%85%D8%8C%20%D8%A3%D8%B1%D9%8A%D8%AF%20%D8%A7%D9%84%D8%A7%D8%B3%D8%AA%D9%81%D8%B3%D8%A7%D8%B1%20%D8%B9%D9%86%20%D8%A3%D8%B3%D8%B9%D8%A7%D8%B1%20%D8%A7%D9%84%D8%AC%D9%85%D9%84%D8%A9" target="_blank" rel="noopener noreferrer">
-          الجملة عبر واتساب
-        </a>
+      <div>
+        <button id="showAllMainBtn" class="btn btn-accent" type="button">عرض كل الأقسام والمنتجات</button>
       </div>
     </section>
 
-    <!-- Brands Strip -->
-    <section class="brands-section">
+    <!-- Categories Quick Filter Strip -->
+    <section class="categories-bar-box">
       <div class="section-header">
-        <h2 class="section-title">تسوّق حسب الماركات</h2>
-        <button id="clearBrandBtn" class="btn btn-outline" type="button" style="padding:5px 12px; font-size:0.8rem;">كل الماركات</button>
+        <h2 class="section-title">تصفّح حسب القسم</h2>
+        <span style="font-size:0.82rem; color:var(--muted);">اختر قسماً محدداً أو اعرض جميع الأقسام</span>
       </div>
-      <div class="brands-row" id="brandsRow"></div>
+      <div class="cat-chips-row" id="categoryChipsRow"></div>
     </section>
 
-    <!-- Filtered View (Shown when searching or selecting a specific category/brand) -->
+    <!-- Filtered View (Shown only when selecting a single category or searching) -->
     <section id="filteredSection" class="store-section" style="display:none;">
       <div class="section-header">
         <h2 class="section-title" id="filteredTitle">نتائج التصفية</h2>
-        <button id="backToSectionsBtn" class="btn btn-outline" type="button">العودة لعرض الأقسام بالترتيب</button>
+        <button id="backToSectionsBtn" class="btn btn-outline" type="button">العودة لعرض كل الأقسام</button>
       </div>
       <div class="products-row" id="filteredGrid"></div>
     </section>
 
-    <!-- Ordered Sections Matching Microtech Layout -->
+    <!-- All Categories & Products View (Default Home View) -->
     <div id="orderedSectionsWrap">
       <!-- 1. الحلول الذكية -->
       <section class="store-section" id="sec-smart">
         <div class="section-header">
           <h2 class="section-title">الحلول الذكية</h2>
-          <button type="button" class="btn btn-outline view-all-cat" data-cat="الحلول الذكية">عرض الكل</button>
+          <button type="button" class="btn btn-outline view-single-cat" data-cat="الحلول الذكية">عرض هذا القسم فقط</button>
         </div>
         <div class="products-row" id="grid-smart"></div>
       </section>
@@ -670,14 +681,14 @@
           <h3>أنظمة مراقبة وأمان متكاملة للمنازل والشركات</h3>
           <p>كاميرات مراقبة عالية الدقة، أجهزة تسجيل NVR وDVR، وأنظمة إنذار وتحكم حديثة مع شحن 100 ج.م في مصر.</p>
         </div>
-        <button type="button" class="btn btn-accent view-all-cat" data-cat="أنظمة الأمن">تصفح أنظمة الأمن</button>
+        <button type="button" class="btn btn-accent view-single-cat" data-cat="أنظمة الأمن">تصفح أنظمة الأمن</button>
       </section>
 
       <!-- 2. أنظمة الأمن -->
       <section class="store-section" id="sec-security">
         <div class="section-header">
           <h2 class="section-title">أنظمة الأمن</h2>
-          <button type="button" class="btn btn-outline view-all-cat" data-cat="أنظمة الأمن">عرض الكل</button>
+          <button type="button" class="btn btn-outline view-single-cat" data-cat="أنظمة الأمن">عرض هذا القسم فقط</button>
         </div>
         <div class="products-row" id="grid-security"></div>
       </section>
@@ -688,14 +699,14 @@
           <h3>أجهزة الكمبيوتر والشاشات وديكور المنزل العصري</h3>
           <p>تشكيلة مميزة من الشاشات وأجهزة الكمبيوتر ولمسات الديكور المنزلي بتوصيل موحد لكل المحافظات.</p>
         </div>
-        <button type="button" class="btn btn-outline view-all-cat" data-cat="أجهزة الكمبيوتر والشاشات">استكشف الأجهزة</button>
+        <button type="button" class="btn btn-outline view-single-cat" data-cat="أجهزة الكمبيوتر والشاشات">استكشف الأجهزة</button>
       </section>
 
       <!-- 3. أجهزة الكمبيوتر والشاشات -->
       <section class="store-section" id="sec-computers">
         <div class="section-header">
           <h2 class="section-title">أجهزة الكمبيوتر والشاشات</h2>
-          <button type="button" class="btn btn-outline view-all-cat" data-cat="أجهزة الكمبيوتر والشاشات">عرض الكل</button>
+          <button type="button" class="btn btn-outline view-single-cat" data-cat="أجهزة الكمبيوتر والشاشات">عرض هذا القسم فقط</button>
         </div>
         <div class="products-row" id="grid-computers"></div>
       </section>
@@ -704,12 +715,29 @@
       <section class="store-section" id="sec-decor">
         <div class="section-header">
           <h2 class="section-title">ديكور المنزل</h2>
-          <button type="button" class="btn btn-outline view-all-cat" data-cat="ديكور المنزل">عرض الكل</button>
+          <button type="button" class="btn btn-outline view-single-cat" data-cat="ديكور المنزل">عرض هذا القسم فقط</button>
         </div>
         <div class="products-row" id="grid-decor"></div>
       </section>
+
+      <!-- Dynamic Extra Categories from products.json -->
+      <div id="extraCategoriesWrap"></div>
     </div>
   </main>
+
+  <!-- Floating WhatsApp Customer Service Icon (No Number Displayed) -->
+  <a
+    class="floating-wa"
+    href="https://wa.me/201012033762"
+    target="_blank"
+    rel="noopener noreferrer"
+    aria-label="خدمة العملاء واتساب"
+  >
+    <svg viewBox="0 0 32 32" aria-hidden="true">
+      <path d="M16.01 3.2c-7.06 0-12.8 5.74-12.8 12.8 0 2.26.59 4.46 1.71 6.4L3.1 29l6.78-1.78a12.74 12.74 0 0 0 6.13 1.56h.01c7.06 0 12.8-5.74 12.8-12.8 0-3.42-1.33-6.63-3.75-9.05A12.72 12.72 0 0 0 16.01 3.2zm0 23.42h-.01a10.6 10.6 0 0 1-5.4-1.48l-.39-.23-4.02 1.05 1.07-3.92-.25-.4a10.6 10.6 0 0 1-1.62-5.64c0-5.85 4.76-10.61 10.62-10.61 2.83 0 5.5 1.1 7.5 3.11a10.54 10.54 0 0 1 3.11 7.51c0 5.85-4.76 10.61-10.61 10.61zm5.82-7.95c-.32-.16-1.89-.93-2.18-1.04-.29-.11-.5-.16-.72.16-.21.32-.82 1.04-1.01 1.25-.19.21-.37.24-.69.08-.32-.16-1.35-.5-2.57-1.59-.95-.85-1.59-1.89-1.78-2.21-.19-.32-.02-.49.14-.65.14-.14.32-.37.48-.56.16-.19.21-.32.32-.53.11-.21.05-.4-.03-.56-.08-.16-.72-1.73-.98-2.37-.26-.62-.52-.54-.72-.55h-.61c-.21 0-.56.08-.85.4-.29.32-1.12 1.09-1.12 2.66s1.15 3.09 1.31 3.3c.16.21 2.26 3.45 5.47 4.84.76.33 1.36.53 1.82.67.77.24 1.46.21 2.01.13.61-.09 1.89-.77 2.15-1.52.27-.75.27-1.39.19-1.52-.08-.13-.29-.21-.61-.37z"/>
+    </svg>
+    <span>خدمة العملاء واتساب</span>
+  </a>
 
   <!-- Cart Modal -->
   <div id="cartModal" class="overlay" aria-hidden="true">
@@ -763,7 +791,7 @@
       </div>
       <div>
         <div class="footer-title">أقسام المتجر</div>
-        <ul class="footer-list">
+        <ul class="footer-list" id="footerCategoriesList">
           <li><a href="#sec-smart">الحلول الذكية</a></li>
           <li><a href="#sec-security">أنظمة الأمن</a></li>
           <li><a href="#sec-computers">أجهزة الكمبيوتر والشاشات</a></li>
@@ -771,10 +799,9 @@
         </ul>
       </div>
       <div>
-        <div class="footer-title">التواصل والطلبات</div>
+        <div class="footer-title">للتواصل</div>
         <ul class="footer-list">
-          <li>واتساب وخدمة العملاء: <a href="https://wa.me/201012033762" target="_blank" rel="noopener noreferrer">01012033762</a></li>
-          <li>طلبات الجملة: عبر واتساب حصراً</li>
+          <li>البريد الإلكتروني: <a href="mailto:elsheikh.systems.eg@gmail.com">elsheikh.systems.eg@gmail.com</a></li>
           <li>الشحن: ثابت 100 ج.م لجميع محافظات مصر</li>
         </ul>
       </div>
@@ -790,15 +817,23 @@
     const CURRENCY = 'EGP';
     const CART_KEY = 'elsheikh_cart_v1';
 
+    const CORE_CATEGORIES = [
+      'الحلول الذكية',
+      'أنظمة الأمن',
+      'أجهزة الكمبيوتر والشاشات',
+      'ديكور المنزل'
+    ];
+
     let allProducts = [];
     let activeCategory = 'ALL';
-    let activeBrand = '';
     let searchTerm = '';
     let cart = JSON.parse(localStorage.getItem(CART_KEY) || '[]');
 
     const searchInput = document.getElementById('searchInput');
-    const brandsRow = document.getElementById('brandsRow');
+    const topNavCategories = document.getElementById('topNavCategories');
+    const categoryChipsRow = document.getElementById('categoryChipsRow');
     const orderedSectionsWrap = document.getElementById('orderedSectionsWrap');
+    const extraCategoriesWrap = document.getElementById('extraCategoriesWrap');
     const filteredSection = document.getElementById('filteredSection');
     const filteredTitle = document.getElementById('filteredTitle');
     const filteredGrid = document.getElementById('filteredGrid');
@@ -809,21 +844,20 @@
       return `${Number(val || 0).toLocaleString('ar-EG')} ج.م`;
     }
 
-    function getBrand(p) {
-      if (p.brand && String(p.brand).trim()) return String(p.brand).trim();
-      const raw = `${p.title || ''} ${p.short_spec || ''}`.toLowerCase();
-      const brands = ['Hikvision', 'Dahua', 'EZVIZ', 'TP-Link', 'Huawei', 'AVATTO', 'Cordless', 'HP', 'Dell', 'Lenovo', 'Samsung', 'LG'];
-      const hit = brands.find(b => raw.includes(b.toLowerCase()));
-      return hit || 'الشيخ للأنظمة الأمنية والحلول الذكية';
-    }
-
     function normalizeCategory(cat) {
       const c = String(cat || '').trim();
+      if (!c) return 'الحلول الذكية';
+      if (CORE_CATEGORIES.includes(c)) return c;
       if (c.includes('ذكي') || c.includes('سمارت')) return 'الحلول الذكية';
       if (c.includes('أمن') || c.includes('كاميرا') || c.includes('مراقبة')) return 'أنظمة الأمن';
       if (c.includes('كمبيوتر') || c.includes('شاش') || c.includes('لاب')) return 'أجهزة الكمبيوتر والشاشات';
       if (c.includes('ديكور')) return 'ديكور المنزل';
-      return c || 'الحلول الذكية';
+      return c;
+    }
+
+    function getAllCategoriesList() {
+      const fromData = allProducts.map(p => normalizeCategory(p.category)).filter(Boolean);
+      return [...new Set([...CORE_CATEGORIES, ...fromData])];
     }
 
     function saveCart() {
@@ -901,7 +935,7 @@
 
     function productCardHtml(p) {
       const img = (p.images && p.images[0]) || 'images/logo.png';
-      const brand = getBrand(p);
+      const cat = normalizeCategory(p.category);
       const detailHref = `product.html?id=${encodeURIComponent(p.id)}`;
       return `
         <article class="product-card">
@@ -909,7 +943,7 @@
             <img src="${img}" alt="${p.title}" onerror="this.src='images/logo.png'" />
           </a>
           <div class="product-content">
-            <div class="vendor-label">الماركة: ${brand}</div>
+            <div class="cat-badge">${cat}</div>
             <a class="product-name" href="${detailHref}">${p.title}</a>
             <p class="product-short">${p.short_spec || ''}</p>
             <div class="price-line">${formatEGP(p.price)}</div>
@@ -922,43 +956,75 @@
       `;
     }
 
-    function renderBrands() {
-      const brands = [...new Set(allProducts.map(p => getBrand(p)).filter(Boolean))];
-      brandsRow.innerHTML = brands.map(b => `
-        <button type="button" class="brand-chip ${activeBrand === b ? 'active' : ''}" data-brand="${b}">${b}</button>
-      `).join('');
+    function selectCategory(cat) {
+      activeCategory = cat;
+      renderCategoryControls();
+      updateView();
+    }
 
-      brandsRow.querySelectorAll('.brand-chip').forEach(btn => {
-        btn.addEventListener('click', () => {
-          activeBrand = activeBrand === btn.dataset.brand ? '' : btn.dataset.brand;
-          renderBrands();
-          updateView();
-        });
+    function renderCategoryControls() {
+      const cats = getAllCategoriesList();
+
+      topNavCategories.innerHTML = [
+        `<button type="button" class="nav-pill ${activeCategory === 'ALL' ? 'active' : ''}" data-cat="ALL">كل الأقسام</button>`,
+        ...cats.map(c => `<button type="button" class="nav-pill ${activeCategory === c ? 'active' : ''}" data-cat="${c}">${c}</button>`)
+      ].join('');
+
+      categoryChipsRow.innerHTML = [
+        `<button type="button" class="cat-chip ${activeCategory === 'ALL' ? 'active' : ''}" data-cat="ALL">كل الأقسام والمنتجات</button>`,
+        ...cats.map(c => `<button type="button" class="cat-chip ${activeCategory === c ? 'active' : ''}" data-cat="${c}">${c}</button>`)
+      ].join('');
+
+      topNavCategories.querySelectorAll('.nav-pill').forEach(btn => {
+        btn.addEventListener('click', () => selectCategory(btn.dataset.cat));
+      });
+
+      categoryChipsRow.querySelectorAll('.cat-chip').forEach(btn => {
+        btn.addEventListener('click', () => selectCategory(btn.dataset.cat));
       });
     }
 
-    function renderOrderedSections() {
-      const map = [
+    function renderAllSectionsAndProducts() {
+      const coreMap = [
         { cat: 'الحلول الذكية', el: document.getElementById('grid-smart') },
         { cat: 'أنظمة الأمن', el: document.getElementById('grid-security') },
         { cat: 'أجهزة الكمبيوتر والشاشات', el: document.getElementById('grid-computers') },
         { cat: 'ديكور المنزل', el: document.getElementById('grid-decor') }
       ];
 
-      map.forEach(({ cat, el }) => {
+      coreMap.forEach(({ cat, el }) => {
         const items = allProducts.filter(p => normalizeCategory(p.category) === cat);
         el.innerHTML = items.length
           ? items.map(productCardHtml).join('')
           : `<div style="grid-column:1/-1; background:#fff; border:1px solid var(--border); border-radius:12px; padding:16px; color:var(--muted);">سيتم إضافة منتجات قسم ${cat} قريباً.</div>`;
       });
+
+      const extraCats = getAllCategoriesList().filter(c => !CORE_CATEGORIES.includes(c));
+      extraCategoriesWrap.innerHTML = extraCats.map(cat => {
+        const items = allProducts.filter(p => normalizeCategory(p.category) === cat);
+        return `
+          <section class="store-section">
+            <div class="section-header">
+              <h2 class="section-title">${cat}</h2>
+              <button type="button" class="btn btn-outline view-single-cat" data-cat="${cat}">عرض هذا القسم فقط</button>
+            </div>
+            <div class="products-row">
+              ${items.map(productCardHtml).join('')}
+            </div>
+          </section>
+        `;
+      }).join('');
+
+      document.querySelectorAll('.view-single-cat').forEach(btn => {
+        btn.addEventListener('click', () => {
+          selectCategory(btn.dataset.cat);
+          window.scrollTo({ top: 0, behavior: 'smooth' });
+        });
+      });
     }
 
     function updateView() {
-      document.querySelectorAll('#topNavCategories .nav-pill').forEach(btn => {
-        btn.classList.toggle('active', btn.dataset.filter === activeCategory);
-      });
-
-      const isFiltering = activeCategory !== 'ALL' || Boolean(activeBrand) || Boolean(searchTerm);
+      const isFiltering = activeCategory !== 'ALL' || Boolean(searchTerm);
       if (!isFiltering) {
         orderedSectionsWrap.style.display = 'block';
         filteredSection.style.display = 'none';
@@ -970,17 +1036,14 @@
 
       const list = allProducts.filter(p => {
         const cat = normalizeCategory(p.category);
-        const br = getBrand(p);
         const okCat = activeCategory === 'ALL' || cat === activeCategory;
-        const okBr = !activeBrand || br === activeBrand;
-        const text = `${p.title || ''} ${cat} ${br} ${p.short_spec || ''} ${p.description || ''}`.toLowerCase();
+        const text = `${p.title || ''} ${cat} ${p.short_spec || ''} ${p.description || ''}`.toLowerCase();
         const okSearch = !searchTerm || text.includes(searchTerm.toLowerCase());
-        return okCat && okBr && okSearch;
+        return okCat && okSearch;
       });
 
       const parts = [];
       if (activeCategory !== 'ALL') parts.push(`قسم: ${activeCategory}`);
-      if (activeBrand) parts.push(`ماركة: ${activeBrand}`);
       if (searchTerm) parts.push(`بحث: "${searchTerm}"`);
       filteredTitle.textContent = `${parts.join(' • ')} (${list.length} منتج)`;
 
@@ -989,38 +1052,16 @@
         : `<div style="grid-column:1/-1; background:#fff; border:1px solid var(--border); border-radius:12px; padding:18px; text-align:center;">لا توجد منتجات مطابقة حالياً.</div>`;
     }
 
-    document.querySelectorAll('#topNavCategories .nav-pill').forEach(btn => {
-      btn.addEventListener('click', () => {
-        activeCategory = btn.dataset.filter;
-        updateView();
-      });
-    });
-
-    document.querySelectorAll('.view-all-cat').forEach(btn => {
-      btn.addEventListener('click', () => {
-        activeCategory = btn.dataset.cat;
-        updateView();
-        window.scrollTo({ top: 0, behavior: 'smooth' });
-      });
-    });
-
-    document.getElementById('clearBrandBtn').addEventListener('click', () => {
-      activeBrand = '';
-      renderBrands();
-      updateView();
-    });
-
-    function resetToHome() {
+    function resetToAllSections() {
       activeCategory = 'ALL';
-      activeBrand = '';
       searchTerm = '';
       searchInput.value = '';
-      renderBrands();
+      renderCategoryControls();
       updateView();
     }
 
-    document.getElementById('showAllMainBtn').addEventListener('click', resetToHome);
-    document.getElementById('backToSectionsBtn').addEventListener('click', resetToHome);
+    document.getElementById('showAllMainBtn').addEventListener('click', resetToAllSections);
+    document.getElementById('backToSectionsBtn').addEventListener('click', resetToAllSections);
 
     searchInput.addEventListener('input', (e) => {
       searchTerm = e.target.value.trim();
@@ -1091,11 +1132,11 @@
         const res = await fetch('products.json', { cache: 'no-store' });
         const data = await res.json();
         allProducts = Array.isArray(data) ? data : (data.products || []);
-        renderBrands();
-        renderOrderedSections();
+        renderCategoryControls();
+        renderAllSectionsAndProducts();
         updateView();
       } catch (err) {
-        orderedSectionsWrap.innerHTML = `<div class="brands-section">تعذر تحميل products.json. تأكد من وجود الملف وصحة تنسيقه.</div>`;
+        orderedSectionsWrap.innerHTML = `<div class="categories-bar-box">تعذر تحميل products.json. تأكد من وجود الملف وصحة تنسيقه.</div>`;
       }
     }
 
