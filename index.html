@@ -969,6 +969,7 @@
         fbq('track', 'AddToCart', {
           content_ids: [String(prod.id)],
           content_name: prod.title,
+          content_type: 'product',
           value: Number(prod.price || 0),
           currency: CURRENCY
         });
