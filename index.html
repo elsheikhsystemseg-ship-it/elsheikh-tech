@@ -70,7 +70,6 @@
       padding: 0 16px;
     }
 
-    /* Top Notice Bar */
     .top-bar {
       background: #06101e;
       color: #e2e8f0;
@@ -89,7 +88,6 @@
 
     .top-bar a:hover { color: #fbbf24; }
 
-    /* Main Header */
     header {
       background: var(--primary-dark);
       color: #fff;
@@ -198,7 +196,6 @@
     }
     .btn-outline:hover { border-color: var(--primary); }
 
-    /* Category Nav Bar */
     .cat-nav {
       background: var(--primary);
       border-top: 1px solid rgba(255, 255, 255, 0.1);
@@ -235,7 +232,6 @@
       color: #fff;
     }
 
-    /* Hero Banner */
     .hero-box {
       margin: 18px 0;
       background: linear-gradient(125deg, #09192e 0%, #0f294a 55%, #1e3a8a 100%);
@@ -273,7 +269,6 @@
       max-width: 680px;
     }
 
-    /* Categories Quick Browse Bar */
     .categories-bar-box {
       background: var(--card);
       border: 1px solid var(--border);
@@ -325,10 +320,7 @@
       color: #fff;
     }
 
-    /* Category Section Blocks */
-    .store-section {
-      margin-bottom: 28px;
-    }
+    .store-section { margin-bottom: 28px; }
 
     .products-row {
       display: grid;
@@ -410,7 +402,6 @@
       margin-top: 8px;
     }
 
-    /* Promo Banners Between Sections */
     .promo-strip {
       background: linear-gradient(90deg, #0f294a 0%, #1e293b 100%);
       color: #fff;
@@ -439,7 +430,6 @@
       color: #f1f5f9;
     }
 
-    /* Floating WhatsApp Button (Bottom Right, No Visible Number) */
     .floating-wa {
       position: fixed;
       bottom: 20px;
@@ -470,7 +460,6 @@
       flex-shrink: 0;
     }
 
-    /* Cart Overlay */
     .overlay {
       position: fixed;
       inset: 0;
@@ -556,7 +545,6 @@
       font-size: 0.9rem;
     }
 
-    /* Footer */
     footer {
       background: var(--primary-dark);
       color: #cbd5e1;
@@ -596,7 +584,6 @@
   </style>
 </head>
 <body>
-  <!-- Top Notice Bar -->
   <div class="top-bar">
     <div class="container top-bar-inner">
       <div>الشحن لجميع محافظات مصر بتكلفة ثابتة <strong>100 ج.م</strong> • العملة: <strong>EGP</strong></div>
@@ -604,7 +591,6 @@
     </div>
   </div>
 
-  <!-- Header -->
   <header>
     <div class="container header-main">
       <a class="brand-logo" href="index.html">
@@ -631,7 +617,6 @@
   </header>
 
   <main class="container">
-    <!-- Hero Banner -->
     <section class="hero-box">
       <div>
         <span class="hero-badge">الشيخ للأنظمة الأمنية والحلول الذكية</span>
@@ -646,7 +631,6 @@
       </div>
     </section>
 
-    <!-- Categories Quick Filter Strip -->
     <section class="categories-bar-box">
       <div class="section-header">
         <h2 class="section-title">تصفّح حسب القسم</h2>
@@ -655,7 +639,6 @@
       <div class="cat-chips-row" id="categoryChipsRow"></div>
     </section>
 
-    <!-- Filtered View (Shown only when selecting a single category or searching) -->
     <section id="filteredSection" class="store-section" style="display:none;">
       <div class="section-header">
         <h2 class="section-title" id="filteredTitle">نتائج التصفية</h2>
@@ -664,9 +647,7 @@
       <div class="products-row" id="filteredGrid"></div>
     </section>
 
-    <!-- All Categories & Products View (Default Home View) -->
     <div id="orderedSectionsWrap">
-      <!-- 1. الحلول الذكية -->
       <section class="store-section" id="sec-smart">
         <div class="section-header">
           <h2 class="section-title">الحلول الذكية</h2>
@@ -675,7 +656,6 @@
         <div class="products-row" id="grid-smart"></div>
       </section>
 
-      <!-- Banner 1 -->
       <section class="promo-strip">
         <div>
           <h3>أنظمة مراقبة وأمان متكاملة للمنازل والشركات</h3>
@@ -684,7 +664,6 @@
         <button type="button" class="btn btn-accent view-single-cat" data-cat="أنظمة الأمن">تصفح أنظمة الأمن</button>
       </section>
 
-      <!-- 2. أنظمة الأمن -->
       <section class="store-section" id="sec-security">
         <div class="section-header">
           <h2 class="section-title">أنظمة الأمن</h2>
@@ -693,7 +672,6 @@
         <div class="products-row" id="grid-security"></div>
       </section>
 
-      <!-- Banner 2 -->
       <section class="promo-strip warm">
         <div>
           <h3>أجهزة الكمبيوتر والشاشات وديكور المنزل العصري</h3>
@@ -702,7 +680,6 @@
         <button type="button" class="btn btn-outline view-single-cat" data-cat="أجهزة الكمبيوتر والشاشات">استكشف الأجهزة</button>
       </section>
 
-      <!-- 3. أجهزة الكمبيوتر والشاشات -->
       <section class="store-section" id="sec-computers">
         <div class="section-header">
           <h2 class="section-title">أجهزة الكمبيوتر والشاشات</h2>
@@ -711,7 +688,6 @@
         <div class="products-row" id="grid-computers"></div>
       </section>
 
-      <!-- 4. ديكور المنزل -->
       <section class="store-section" id="sec-decor">
         <div class="section-header">
           <h2 class="section-title">ديكور المنزل</h2>
@@ -720,12 +696,10 @@
         <div class="products-row" id="grid-decor"></div>
       </section>
 
-      <!-- Dynamic Extra Categories from products.json -->
       <div id="extraCategoriesWrap"></div>
     </div>
   </main>
 
-  <!-- Floating WhatsApp Customer Service Icon (No Number Displayed) -->
   <a
     class="floating-wa"
     href="https://wa.me/201012033762"
@@ -739,7 +713,6 @@
     <span>خدمة العملاء واتساب</span>
   </a>
 
-  <!-- Cart Modal -->
   <div id="cartModal" class="overlay" aria-hidden="true">
     <div class="modal-card">
       <div class="modal-head">
@@ -780,7 +753,6 @@
     </div>
   </div>
 
-  <!-- Footer -->
   <footer>
     <div class="container footer-grid">
       <div>
@@ -791,7 +763,7 @@
       </div>
       <div>
         <div class="footer-title">أقسام المتجر</div>
-        <ul class="footer-list" id="footerCategoriesList">
+        <ul class="footer-list">
           <li><a href="#sec-smart">الحلول الذكية</a></li>
           <li><a href="#sec-security">أنظمة الأمن</a></li>
           <li><a href="#sec-computers">أجهزة الكمبيوتر والشاشات</a></li>
@@ -812,6 +784,10 @@
   </footer>
 
   <script>
+    // ضع هنا رابط CSV المنشور من Google Sheets (File -> Share -> Publish to web -> CSV)
+    const GOOGLE_SHEETS_CSV_URL = '';
+    const FALLBACK_JSON_URL = 'products.json';
+
     const WHATSAPP_NUMBER = '201012033762';
     const SHIPPING_FEE = 100;
     const CURRENCY = 'EGP';
@@ -842,6 +818,98 @@
 
     function formatEGP(val) {
       return `${Number(val || 0).toLocaleString('ar-EG')} ج.م`;
+    }
+
+    function parseCsvRows(csvText) {
+      const rows = [];
+      let row = [];
+      let field = '';
+      let inQuotes = false;
+
+      for (let i = 0; i < csvText.length; i++) {
+        const ch = csvText[i];
+        const next = csvText[i + 1];
+        if (ch === '"' && inQuotes && next === '"') {
+          field += '"';
+          i++;
+        } else if (ch === '"') {
+          inQuotes = !inQuotes;
+        } else if (ch === ',' && !inQuotes) {
+          row.push(field.trim());
+          field = '';
+        } else if ((ch === '\n' || ch === '\r') && !inQuotes) {
+          if (ch === '\r' && next === '\n') i++;
+          row.push(field.trim());
+          if (row.some(cell => cell !== '')) rows.push(row);
+          row = [];
+          field = '';
+        } else {
+          field += ch;
+        }
+      }
+      if (field.length > 0 || row.length > 0) {
+        row.push(field.trim());
+        if (row.some(cell => cell !== '')) rows.push(row);
+      }
+      return rows;
+    }
+
+    function parseSpecsCell(rawSpecs) {
+      if (!rawSpecs) return {};
+      if (typeof rawSpecs === 'object') return rawSpecs;
+      const trimmed = String(rawSpecs).trim();
+      if (!trimmed) return {};
+      if (trimmed.startsWith('{')) {
+        try { return JSON.parse(trimmed); } catch (_) { return {}; }
+      }
+      const obj = {};
+      trimmed.split('|').forEach(pair => {
+        const idx = pair.indexOf(':');
+        if (idx > -1) {
+          const k = pair.slice(0, idx).trim();
+          const v = pair.slice(idx + 1).trim();
+          if (k && v) obj[k] = v;
+        }
+      });
+      return obj;
+    }
+
+    function mapSheetRowsToProducts(rows) {
+      if (!rows.length) return [];
+      const headers = rows[0].map(h => h.trim().toLowerCase());
+      return rows.slice(1).map((r, index) => {
+        const obj = {};
+        headers.forEach((h, idx) => { obj[h] = r[idx] || ''; });
+        const imgs = (obj.images || '')
+          .split(/[\n,]/)
+          .map(s => s.trim())
+          .filter(Boolean);
+        const numericPrice = Number(String(obj.price || '0').replace(/[^0-9.]/g, '')) || 0;
+        return {
+          id: (obj.id || `prod-${index + 1}`).trim(),
+          title: (obj.title || '').trim(),
+          category: (obj.category || '').trim(),
+          price: numericPrice,
+          short_spec: (obj.short_spec || '').trim(),
+          description: (obj.description || '').trim(),
+          images: imgs,
+          video_url: (obj.video_url || '').trim(),
+          specs: parseSpecsCell(obj.specs)
+        };
+      }).filter(p => p.title);
+    }
+
+    async function loadProductsData() {
+      if (GOOGLE_SHEETS_CSV_URL && GOOGLE_SHEETS_CSV_URL.trim()) {
+        const res = await fetch(GOOGLE_SHEETS_CSV_URL.trim(), { cache: 'no-store' });
+        if (!res.ok) throw new Error('Sheet fetch failed');
+        const csvText = await res.text();
+        const rows = parseCsvRows(csvText);
+        return mapSheetRowsToProducts(rows);
+      }
+      const res = await fetch(FALLBACK_JSON_URL, { cache: 'no-store' });
+      const data = await res.json();
+      return Array.isArray(data) ? data : (data.products || []);
     }
 
     function normalizeCategory(cat) {
@@ -1129,14 +1197,12 @@
     async function initStore() {
       updateCartUI();
       try {
-        const res = await fetch('products.json', { cache: 'no-store' });
-        const data = await res.json();
-        allProducts = Array.isArray(data) ? data : (data.products || []);
+        allProducts = await loadProductsData();
         renderCategoryControls();
         renderAllSectionsAndProducts();
         updateView();
       } catch (err) {
-        orderedSectionsWrap.innerHTML = `<div class="categories-bar-box">تعذر تحميل products.json. تأكد من وجود الملف وصحة تنسيقه.</div>`;
+        orderedSectionsWrap.innerHTML = `<div class="categories-bar-box">تعذر تحميل المنتجات حالياً. تأكد من رابط Google Sheets أو ملف products.json.</div>`;
       }
     }
 
