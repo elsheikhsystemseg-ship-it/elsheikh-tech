@@ -302,10 +302,14 @@
   </main>
 
   <footer>
-    الشيخ للأنظمة الأمنية والحلول الذكية • مصر • واتساب: 01012033762
+    الشيخ للأنظمة الأمنية والحلول الذكية • مصر • elsheikh.systems.eg@gmail.com
   </footer>
 
   <script>
+    // ضع هنا نفس رابط CSV المنشور من Google Sheets الموجود في index.html
+    const GOOGLE_SHEETS_CSV_URL = '';
+    const FALLBACK_JSON_URL = 'products.json';
+
     const WHATSAPP_NUMBER = '201012033762';
     const SHIPPING_FEE = 100;
     const CURRENCY = 'EGP';
@@ -318,6 +322,97 @@
     function getProductIdFromUrl() {
       const params = new URLSearchParams(window.location.search);
       return (params.get('id') || '').trim();
+    }
+
+    function parseCsvRows(csvText) {
+      const rows = [];
+      let row = [];
+      let field = '';
+      let inQuotes = false;
+
+      for (let i = 0; i < csvText.length; i++) {
+        const ch = csvText[i];
+        const next = csvText[i + 1];
+        if (ch === '"' && inQuotes && next === '"') {
+          field += '"';
+          i++;
+        } else if (ch === '"') {
+          inQuotes = !inQuotes;
+        } else if (ch === ',' && !inQuotes) {
+          row.push(field.trim());
+          field = '';
+        } else if ((ch === '\n' || ch === '\r') && !inQuotes) {
+          if (ch === '\r' && next === '\n') i++;
+          row.push(field.trim());
+          if (row.some(cell => cell !== '')) rows.push(row);
+          row = [];
+          field = '';
+        } else {
+          field += ch;
+        }
+      }
+      if (field.length > 0 || row.length > 0) {
+        row.push(field.trim());
+        if (row.some(cell => cell !== '')) rows.push(row);
+      }
+      return rows;
+    }
+
+    function parseSpecsCell(rawSpecs) {
+      if (!rawSpecs) return {};
+      if (typeof rawSpecs === 'object') return rawSpecs;
+      const trimmed = String(rawSpecs).trim();
+      if (!trimmed) return {};
+      if (trimmed.startsWith('{')) {
+        try { return JSON.parse(trimmed); } catch (_) { return {}; }
+      }
+      const obj = {};
+      trimmed.split('|').forEach(pair => {
+        const idx = pair.indexOf(':');
+        if (idx > -1) {
+          const k = pair.slice(0, idx).trim();
+          const v = pair.slice(idx + 1).trim();
+          if (k && v) obj[k] = v;
+        }
+      });
+      return obj;
+    }
+
+    function mapSheetRowsToProducts(rows) {
+      if (!rows.length) return [];
+      const headers = rows[0].map(h => h.trim().toLowerCase());
+      return rows.slice(1).map((r, index) => {
+        const obj = {};
+        headers.forEach((h, idx) => { obj[h] = r[idx] || ''; });
+        const imgs = (obj.images || '')
+          .split(/[\n,]/)
+          .map(s => s.trim())
+          .filter(Boolean);
+        const numericPrice = Number(String(obj.price || '0').replace(/[^0-9.]/g, '')) || 0;
+        return {
+          id: (obj.id || `prod-${index + 1}`).trim(),
+          title: (obj.title || '').trim(),
+          category: (obj.category || '').trim(),
+          price: numericPrice,
+          short_spec: (obj.short_spec || '').trim(),
+          description: (obj.description || '').trim(),
+          images: imgs,
+          video_url: (obj.video_url || '').trim(),
+          specs: parseSpecsCell(obj.specs)
+        };
+      }).filter(p => p.title);
+    }
+
+    async function loadProductsList() {
+      if (GOOGLE_SHEETS_CSV_URL && GOOGLE_SHEETS_CSV_URL.trim()) {
+        const res = await fetch(GOOGLE_SHEETS_CSV_URL.trim(), { cache: 'no-store' });
+        if (!res.ok) throw new Error('Sheet fetch failed');
+        const csvText = await res.text();
+        return mapSheetRowsToProducts(parseCsvRows(csvText));
+      }
+      const res = await fetch(FALLBACK_JSON_URL, { cache: 'no-store' });
+      const data = await res.json();
+      return Array.isArray(data) ? data : (data.products || []);
     }
 
     function getYoutubeEmbedUrl(rawUrl) {
@@ -384,7 +479,7 @@
             لم يتم العثور على المنتج المطلوب
           </h1>
           <p style="color:var(--muted); margin-bottom:16px;">
-            المعرّف المطلوب: <strong>${requestedId || 'غير محدد'}</strong> — تأكد من تطابق قيمة <code>id</code> في ملف <code>products.json</code>.
+            المعرّف المطلوب: <strong>${requestedId || 'غير محدد'}</strong> — تأكد من تطابق قيمة <code>id</code> في جدول Google Sheets أو <code>products.json</code>.
           </p>
           <a class="btn btn-primary" href="index.html">العودة إلى صفحة المتجر</a>
         </div>
@@ -395,10 +490,9 @@
       document.title = `${product.title} | الشيخ للأنظمة الأمنية والحلول الذكية`;
 
       const galleryImgs = buildFourPlusImages(product);
-      const brand = product.brand || 'الشيخ للأنظمة الأمنية والحلول الذكية';
       const specsEntries = product.specs && typeof product.specs === 'object' ? Object.entries(product.specs) : [];
 
-      /* ضع رابط الفيديو الخاص بالمنتج هنا في ملف products.json داخل الحقل "video_url" (رابط يوتيوب أو رابط فيديو من موقع المنتج) */
+      /* ضع رابط الفيديو الخاص بالمنتج هنا في عمود video_url بجدول Google Sheets أو في products.json */
       const productVideoUrl = product.video_url || '';
       const embedUrl = getYoutubeEmbedUrl(productVideoUrl);
 
@@ -426,7 +520,7 @@
           <div class="video-section">
             <div style="font-weight:800; color:var(--primary-dark);">فيديو المنتج</div>
             <div style="font-size:0.85rem; color:var(--muted); margin-top:4px;">
-              <!-- ضع رابط الفيديو الخاص بالمنتج هنا في products.json عبر الحقل "video_url" -->
+              <!-- ضع رابط الفيديو الخاص بالمنتج هنا في عمود video_url بجدول Google Sheets -->
               سيتم إضافة رابط الفيديو الخاص بهذا المنتج قريباً.
             </div>
           </div>
@@ -457,7 +551,7 @@
           <div>
             <div class="badge-row">
               <span class="badge">${product.category || 'منتجات'}</span>
-              <span class="badge">${brand}</span>
+              <span class="badge">الشيخ للأنظمة الأمنية والحلول الذكية</span>
               <span class="badge">التوصيل في مصر</span>
             </div>
 
@@ -536,17 +630,9 @@
     async function initProductPage() {
       const requestedId = getProductIdFromUrl();
       try {
-        const res = await fetch('products.json', { cache: 'no-store' });
-        const data = await res.json();
-        const list = Array.isArray(data) ? data : (data.products || []);
-
+        const list = await loadProductsList();
         const normalizedTarget = requestedId.toLowerCase();
-        const found = list.find(p => {
-          const candidates = [p.id, p.slug, p.sku, p.code]
-            .filter(Boolean)
-            .map(v => String(v).trim().toLowerCase());
-          return candidates.includes(normalizedTarget);
-        });
+        const found = list.find(p => String(p.id || '').trim().toLowerCase() === normalizedTarget);
 
         if (!found) {
           renderNotFound(requestedId);
