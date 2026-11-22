@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>الشيخ للأنظمة الأمنية والحلول الذكية | مصر</title>
+  <title>الشيخ للأنظمة الأمنية والحلول الذكية</title>
 
   <!-- Google Analytics 4 (G-PMT7CG9FER) -->
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-PMT7CG9FER"></script>
@@ -69,24 +69,6 @@
       margin: 0 auto;
       padding: 0 16px;
     }
-
-    .top-bar {
-      background: #06101e;
-      color: #e2e8f0;
-      font-size: 0.8rem;
-      padding: 7px 0;
-      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
-    }
-
-    .top-bar-inner {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      gap: 12px;
-      flex-wrap: wrap;
-    }
-
-    .top-bar a:hover { color: #fbbf24; }
 
     header {
       background: var(--primary-dark);
@@ -584,20 +566,13 @@
   </style>
 </head>
 <body>
-  <div class="top-bar">
-    <div class="container top-bar-inner">
-      <div>الشحن لجميع محافظات مصر بتكلفة ثابتة <strong>100 ج.م</strong> • العملة: <strong>EGP</strong></div>
-      <div>للتواصل: <a href="mailto:elsheikh.systems.eg@gmail.com">elsheikh.systems.eg@gmail.com</a></div>
-    </div>
-  </div>
-
   <header>
     <div class="container header-main">
       <a class="brand-logo" href="index.html">
         <img src="images/logo.png" alt="الشيخ للأنظمة الأمنية والحلول الذكية" onerror="this.style.display='none'" />
         <div>
           <div class="brand-name">الشيخ للأنظمة الأمنية والحلول الذكية</div>
-          <div class="brand-tag">متجر إلكتروني • مصر</div>
+          <div class="brand-tag">متجر إلكتروني</div>
         </div>
       </a>
 
@@ -782,8 +757,8 @@
       جميع الحقوق محفوظة © الشيخ للأنظمة الأمنية والحلول الذكية • مصر
     </div>
   </footer>
+
   <script>
-    // ضع هنا رابط CSV المنشور من Google Sheets (File -> Share -> Publish to web -> CSV)
     const GOOGLE_SHEETS_CSV_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vQ8KcmaqiDk_u8vcjoZJjw5XveGIUA6xHp1T53M4B-pFXjmxSrxjfZNRWgAqLa-OGF-4dSablRMKDtl/pub?output=csv';
     const FALLBACK_JSON_URL = 'products.json';
 
@@ -1042,59 +1017,85 @@
         ...cats.map(c => `<button type="button" class="cat-chip ${activeCategory === c ? 'active' : ''}" data-cat="${c}">${c}</button>`)
       ].join('');
 
-      topNavCategories.querySelectorAll('.nav-pill').forEach(btn => {
-        btn.addEventListener('click', () => selectCategory(btn.dataset.cat));
-      });
-
-      categoryChipsRow.querySelectorAll('.cat-chip').forEach(btn => {
-        btn.addEventListener('click', () => selectCategory(btn.dataset.cat));
+      document.querySelectorAll('[data-cat]').forEach(el => {
+        el.addEventListener('click', () => {
+          selectCategory(el.getAttribute('data-cat'));
+          if (el.classList.contains('view-single-cat')) {
+            window.scrollTo({ top: filteredSection.offsetTop - 90, behavior: 'smooth' });
+          }
+        });
       });
     }
 
-    function renderAllSectionsAndProducts() {
-      const coreMap = [
-        { cat: 'الحلول الذكية', el: document.getElementById('grid-smart') },
-        { cat: 'أنظمة الأمن', el: document.getElementById('grid-security') },
-        { cat: 'أجهزة الكمبيوتر والشاشات', el: document.getElementById('grid-computers') },
-        { cat: 'ديكور المنزل', el: document.getElementById('grid-decor') }
-      ];
+    function matchesSearch(p) {
+      if (!searchTerm.trim()) return true;
+      const q = searchTerm.trim().toLowerCase();
+      return (
+        String(p.title || '').toLowerCase().includes(q) ||
+        String(p.category || '').toLowerCase().includes(q) ||
+        String(p.short_spec || '').toLowerCase().includes(q) ||
+        String(p.description || '').toLowerCase().includes(q)
+      );
+    }
 
-      coreMap.forEach(({ cat, el }) => {
-        const items = allProducts.filter(p => normalizeCategory(p.category) === cat);
-        el.innerHTML = items.length
-          ? items.map(productCardHtml).join('')
-          : `<div style="grid-column:1/-1; background:#fff; border:1px solid var(--border); border-radius:12px; padding:16px; color:var(--muted);">سيتم إضافة منتجات قسم ${cat} قريباً.</div>`;
+    function renderOrderedSections() {
+      const byCat = {
+        'الحلول الذكية': [],
+        'أنظمة الأمن': [],
+        'أجهزة الكمبيوتر والشاشات': [],
+        'ديكور المنزل': []
+      };
+      const extras = {};
+
+      allProducts.filter(matchesSearch).forEach(p => {
+        const norm = normalizeCategory(p.category);
+        if (byCat[norm]) byCat[norm].push(p);
+        else {
+          if (!extras[norm]) extras[norm] = [];
+          extras[norm].push(p);
+        }
       });
 
-      const extraCats = getAllCategoriesList().filter(c => !CORE_CATEGORIES.includes(c));
-      extraCategoriesWrap.innerHTML = extraCats.map(cat => {
-        const items = allProducts.filter(p => normalizeCategory(p.category) === cat);
-        return `
-          <section class="store-section">
-            <div class="section-header">
-              <h2 class="section-title">${cat}</h2>
-              <button type="button" class="btn btn-outline view-single-cat" data-cat="${cat}">عرض هذا القسم فقط</button>
-            </div>
-            <div class="products-row">
-              ${items.map(productCardHtml).join('')}
-            </div>
-          </section>
-        `;
-      }).join('');
+      const fillGrid = (elId, list) => {
+        const el = document.getElementById(elId);
+        if (!el) return;
+        el.innerHTML = list.length
+          ? list.map(productCardHtml).join('')
+          : `<p style="color:var(--muted); font-size:0.88rem;">لا توجد منتجات في هذا القسم حالياً.</p>`;
+      };
 
-      document.querySelectorAll('.view-single-cat').forEach(btn => {
+      fillGrid('grid-smart', byCat['الحلول الذكية']);
+      fillGrid('grid-security', byCat['أنظمة الأمن']);
+      fillGrid('grid-computers', byCat['أجهزة الكمبيوتر والشاشات']);
+      fillGrid('grid-decor', byCat['ديكور المنزل']);
+
+      const extraKeys = Object.keys(extras);
+      extraCategoriesWrap.innerHTML = extraKeys.map(catName => `
+        <section class="store-section">
+          <div class="section-header">
+            <h2 class="section-title">${catName}</h2>
+            <button type="button" class="btn btn-outline view-single-cat" data-cat="${catName}">عرض هذا القسم فقط</button>
+          </div>
+          <div class="products-row">${extras[catName].map(productCardHtml).join('')}</div>
+        </section>
+      `).join('');
+
+      extraCategoriesWrap.querySelectorAll('.view-single-cat').forEach(btn => {
         btn.addEventListener('click', () => {
-          selectCategory(btn.dataset.cat);
-          window.scrollTo({ top: 0, behavior: 'smooth' });
+          selectCategory(btn.getAttribute('data-cat'));
+          window.scrollTo({ top: filteredSection.offsetTop - 90, behavior: 'smooth' });
         });
       });
     }
 
     function updateView() {
-      const isFiltering = activeCategory !== 'ALL' || Boolean(searchTerm);
-      if (!isFiltering) {
-        orderedSectionsWrap.style.display = 'block';
+      const hasSearch = Boolean(searchTerm.trim());
+      const isFiltered = activeCategory !== 'ALL' || hasSearch;
+
+      if (!isFiltered) {
         filteredSection.style.display = 'none';
+        orderedSectionsWrap.style.display = 'block';
+        renderOrderedSections();
         return;
       }
 
@@ -1102,42 +1103,40 @@
       filteredSection.style.display = 'block';
 
       const list = allProducts.filter(p => {
-        const cat = normalizeCategory(p.category);
-        const okCat = activeCategory === 'ALL' || cat === activeCategory;
-        const text = `${p.title || ''} ${cat} ${p.short_spec || ''} ${p.description || ''}`.toLowerCase();
-        const okSearch = !searchTerm || text.includes(searchTerm.toLowerCase());
-        return okCat && okSearch;
+        const catOk = activeCategory === 'ALL' || normalizeCategory(p.category) === activeCategory;
+        return catOk && matchesSearch(p);
       });
 
-      const parts = [];
-      if (activeCategory !== 'ALL') parts.push(`قسم: ${activeCategory}`);
-      if (searchTerm) parts.push(`بحث: "${searchTerm}"`);
-      filteredTitle.textContent = `${parts.join(' • ')} (${list.length} منتج)`;
+      const titleParts = [];
+      if (activeCategory !== 'ALL') titleParts.push(activeCategory);
+      if (hasSearch) titleParts.push(`بحث: "${searchTerm.trim()}"`);
+      filteredTitle.textContent = titleParts.join(' • ') || 'نتائج التصفية';
 
       filteredGrid.innerHTML = list.length
         ? list.map(productCardHtml).join('')
-        : `<div style="grid-column:1/-1; background:#fff; border:1px solid var(--border); border-radius:12px; padding:18px; text-align:center;">لا توجد منتجات مطابقة حالياً.</div>`;
+        : `<p style="color:var(--muted);">لا توجد منتجات مطابقة لاختيارك الحالي.</p>`;
     }
 
-    function resetToAllSections() {
-      activeCategory = 'ALL';
-      searchTerm = '';
-      searchInput.value = '';
-      renderCategoryControls();
-      updateView();
-    }
-
-    document.getElementById('showAllMainBtn').addEventListener('click', resetToAllSections);
-    document.getElementById('backToSectionsBtn').addEventListener('click', resetToAllSections);
-
-    searchInput.addEventListener('input', (e) => {
-      searchTerm = e.target.value.trim();
+    document.getElementById('searchBtn').addEventListener('click', () => {
+      searchTerm = searchInput.value;
       updateView();
     });
 
-    document.getElementById('searchBtn').addEventListener('click', () => {
-      searchTerm = searchInput.value.trim();
+    searchInput.addEventListener('input', () => {
+      searchTerm = searchInput.value;
       updateView();
+    });
+
+    document.getElementById('showAllMainBtn').addEventListener('click', () => {
+      searchInput.value = '';
+      searchTerm = '';
+      selectCategory('ALL');
+    });
+
+    document.getElementById('backToSectionsBtn').addEventListener('click', () => {
+      searchInput.value = '';
+      searchTerm = '';
+      selectCategory('ALL');
     });
 
     document.getElementById('openCartBtn').addEventListener('click', () => {
@@ -1159,36 +1158,42 @@
         alert('السلة فارغة، أضف منتجاً أولاً.');
         return;
       }
-
       const name = document.getElementById('custName').value.trim();
       const phone = document.getElementById('custPhone').value.trim();
       const address = document.getElementById('custAddress').value.trim();
       const payment = document.getElementById('custPayment').value;
 
       const sub = cart.reduce((s, i) => s + i.price * i.qty, 0);
-      const total = sub + SHIPPING_FEE;
-
+      const grand = sub + SHIPPING_FEE;
       const itemsText = cart.map((i, idx) => `${idx + 1}. ${i.title} × ${i.qty} = ${formatEGP(i.price * i.qty)}`).join('\n');
+
+      if (typeof gtag === 'function') {
+        gtag('event', 'begin_checkout', {
+          currency: CURRENCY,
+          value: grand,
+          items: cart.map(i => ({ item_id: String(i.id), item_name: i.title, price: Number(i.price || 0), quantity: i.qty }))
+        });
+      }
+      if (typeof fbq === 'function') {
+        fbq('track', 'InitiateCheckout', {
+          num_items: cart.reduce((s, i) => s + i.qty, 0),
+          value: grand,
+          currency: CURRENCY
+        });
+      }
+
       const msg = [
         'طلب جديد - الشيخ للأنظمة الأمنية والحلول الذكية',
-        '--------------------------------',
-        itemsText,
-        '--------------------------------',
-        `المجموع الفرعي: ${formatEGP(sub)}`,
-        `الشحن الثابت (مصر): ${formatEGP(SHIPPING_FEE)}`,
-        `الإجمالي: ${formatEGP(total)}`,
         `الاسم: ${name}`,
         `الموبايل: ${phone}`,
         `العنوان: ${address}`,
-        `طريقة الدفع: ${payment}`
+        `طريقة الدفع: ${payment}`,
+        '--- المنتجات ---',
+        itemsText,
+        `المجموع الفرعي: ${formatEGP(sub)}`,
+        `الشحن الثابت: ${formatEGP(SHIPPING_FEE)}`,
+        `الإجمالي النهائي: ${formatEGP(grand)}`
       ].join('\n');
-
-      if (typeof gtag === 'function') {
-        gtag('event', 'begin_checkout', { currency: CURRENCY, value: total });
-      }
-      if (typeof fbq === 'function') {
-        fbq('track', 'InitiateCheckout', { value: total, currency: CURRENCY });
-      }
 
       window.open(`https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(msg)}`, '_blank', 'noopener,noreferrer');
     });
@@ -1197,12 +1202,11 @@
       updateCartUI();
       try {
         allProducts = await loadProductsData();
-        renderCategoryControls();
-        renderAllSectionsAndProducts();
-        updateView();
       } catch (err) {
-        orderedSectionsWrap.innerHTML = `<div class="categories-bar-box">تعذر تحميل المنتجات حالياً. تأكد من رابط Google Sheets أو ملف products.json.</div>`;
+        allProducts = [];
       }
+      renderCategoryControls();
+      updateView();
     }
 
     initStore();
