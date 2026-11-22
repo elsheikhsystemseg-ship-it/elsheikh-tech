@@ -273,6 +273,14 @@
       font-weight: 800;
     }
 
+    .not-found-box {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 28px;
+      text-align: center;
+    }
+
     footer {
       text-align: center;
       color: var(--muted);
@@ -309,10 +317,9 @@
 
     function getProductIdFromUrl() {
       const params = new URLSearchParams(window.location.search);
-      return params.get('id');
+      return (params.get('id') || '').trim();
     }
 
-    // تحويل رابط يوتيوب العادي أو القصير إلى رابط تضمين إن أمكن، مع الاحتفاظ بالرابط الأصلي للمشاهدة المباشرة
     function getYoutubeEmbedUrl(rawUrl) {
       if (!rawUrl) return '';
       const trimmed = String(rawUrl).trim();
@@ -327,7 +334,7 @@
     function buildFourPlusImages(product) {
       const rawImgs = Array.isArray(product.images) && product.images.length
         ? product.images.filter(Boolean)
-        : ['images/logo.png'];
+        : (product.image ? [product.image] : ['images/logo.png']);
 
       const gallery = [...rawImgs];
       while (gallery.length < 4) {
@@ -368,6 +375,20 @@
         });
       }
       alert('تمت إضافة المنتج إلى السلة بنجاح.');
+    }
+
+    function renderNotFound(requestedId) {
+      document.getElementById('productContainer').innerHTML = `
+        <div class="not-found-box">
+          <h1 style="font-size:1.25rem; font-weight:900; color:var(--primary-dark); margin-bottom:8px;">
+            لم يتم العثور على المنتج المطلوب
+          </h1>
+          <p style="color:var(--muted); margin-bottom:16px;">
+            المعرّف المطلوب: <strong>${requestedId || 'غير محدد'}</strong> — تأكد من تطابق قيمة <code>id</code> في ملف <code>products.json</code>.
+          </p>
+          <a class="btn btn-primary" href="index.html">العودة إلى صفحة المتجر</a>
+        </div>
+      `;
     }
 
     function renderProduct(product) {
@@ -513,14 +534,22 @@
     }
 
     async function initProductPage() {
-      const id = getProductIdFromUrl();
+      const requestedId = getProductIdFromUrl();
       try {
         const res = await fetch('products.json', { cache: 'no-store' });
         const data = await res.json();
         const list = Array.isArray(data) ? data : (data.products || []);
-        const found = list.find(p => String(p.id) === String(id)) || list[0];
+
+        const normalizedTarget = requestedId.toLowerCase();
+        const found = list.find(p => {
+          const candidates = [p.id, p.slug, p.sku, p.code]
+            .filter(Boolean)
+            .map(v => String(v).trim().toLowerCase());
+          return candidates.includes(normalizedTarget);
+        });
+
         if (!found) {
-          document.getElementById('productContainer').innerHTML = '<p>المنتج غير متوفر حالياً.</p>';
+          renderNotFound(requestedId);
           return;
         }
         renderProduct(found);
