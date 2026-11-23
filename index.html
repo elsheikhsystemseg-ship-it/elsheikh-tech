@@ -770,7 +770,7 @@
     const CORE_CATEGORIES = [
       'الحلول الذكية',
       'أنظمة الأمن',
-      'أجهزة الكمبيوتر والشاشات',
+      'أجهزة الكمبيوتر والشاشات والإكسسوارات',
       'ديكور المنزل'
     ];
 
@@ -892,7 +892,7 @@
       if (CORE_CATEGORIES.includes(c)) return c;
       if (c.includes('ذكي') || c.includes('سمارت')) return 'الحلول الذكية';
       if (c.includes('أمن') || c.includes('كاميرا') || c.includes('مراقبة')) return 'أنظمة الأمن';
-      if (c.includes('كمبيوتر') || c.includes('شاش') || c.includes('لاب')) return 'أجهزة الكمبيوتر والشاشات';
+      if (c.includes('كمبيوتر') || c.includes('إكسسوار') || c.includes('شاش') || c.includes('لاب')) return 'أجهزة الكمبيوتر والشاشات والإكسسوارات';
       if (c.includes('ديكور')) return 'ديكور المنزل';
       return c;
     }
@@ -1067,7 +1067,7 @@
 
       fillGrid('grid-smart', byCat['الحلول الذكية']);
       fillGrid('grid-security', byCat['أنظمة الأمن']);
-      fillGrid('grid-computers', byCat['أجهزة الكمبيوتر والشاشات']);
+      fillGrid('grid-computers', byCat['أجهزة الكمبيوتر والشاشات والإكسسوارات']);
       fillGrid('grid-decor', byCat['ديكور المنزل']);
 
       const extraKeys = Object.keys(extras);
