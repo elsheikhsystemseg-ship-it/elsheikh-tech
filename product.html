@@ -1469,13 +1469,8 @@
       });
 
 let specsEntries = product.specs && typeof product.specs === 'object' ? Object.entries(product.specs) : [];
-
-const hasWarrantyKey = specsEntries.some(([key]) =>
-  ['الضمان', 'warranty'].includes(String(key).trim().toLowerCase())
-);
-
-if (product.warranty && !hasWarrantyKey) {
-  specsEntries.push(['الضمان', product.warranty]);
+if (product.warranty) {
+  specsEntries = [['الضمان', product.warranty], ...specsEntries];
 }
       
 
@@ -1549,11 +1544,11 @@ if (product.warranty && !hasWarrantyKey) {
 
             <p style="margin-bottom:12px;">${product.description || product.short_spec || ''}</p>
 
-            ${.length ? `
+            ${specsEntries.length ? `
               <h2 style="font-size:1rem; font-weight:800; color:var(--primary-dark); margin-top:10px;">المواصفات الكاملة</h2>
               <table class="specs-table">
                 <tbody>
-                  ${.map(([k, v]) => `<tr><td>${k}</td><td>${v}</td></tr>`).join('')}
+                  ${specsEntries.map(([k, v]) => `<tr><td>${k}</td><td>${v}</td></tr>`).join('')}
                 </tbody>
               </table>
             ` : ''}
