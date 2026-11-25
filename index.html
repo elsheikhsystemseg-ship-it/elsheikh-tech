@@ -1485,6 +1485,7 @@
       const q = searchTerm.trim().toLowerCase();
       return (
         String(p.title || '').toLowerCase().includes(q) ||
+        String(p.warranty || '').toLowerCase().includes(q) ||
         String(p.category || '').toLowerCase().includes(q) ||
         String(p.short_spec || '').toLowerCase().includes(q) ||
         String(p.description || '').toLowerCase().includes(q)
