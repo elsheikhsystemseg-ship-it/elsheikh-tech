@@ -1357,6 +1357,7 @@
           category: (obj.category || '').trim(),
           price: numericPrice,
           short_spec: (obj.short_spec || '').trim(),
+          warranty: (obj.warranty || '').trim(),
           description: (obj.description || '').trim(),
           images: imgs,
           video_url: (obj.video_url || '').trim(),
@@ -1467,6 +1468,11 @@
         pre.src = src;
       });
 
+      const specsEntries = product.specs && typeof product.specs === 'object' ? Object.entries(product.specs) : [];
+     if (product.warranty) {
+     specsEntries.unshift(['الضمان', product.warranty]);
+      }
+      
       const specsEntries = product.specs && typeof product.specs === 'object' ? Object.entries(product.specs) : [];
 
       const rawVideoCell = String(product.video_url || '').trim();
