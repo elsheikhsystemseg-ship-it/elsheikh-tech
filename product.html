@@ -1468,12 +1468,11 @@
         pre.src = src;
       });
 
-      const specsEntries = product.specs && typeof product.specs === 'object' ? Object.entries(product.specs) : [];
-     if (product.warranty) {
-     specsEntries.unshift(['الضمان', product.warranty]);
-      }
+let specsEntries = product.specs && typeof product.specs === 'object' ? Object.entries(product.specs) : [];
+if (product.warranty) {
+  specsEntries = [['الضمان', product.warranty], ...specsEntries];
+}
       
-      const specsEntries = product.specs && typeof product.specs === 'object' ? Object.entries(product.specs) : [];
 
       const rawVideoCell = String(product.video_url || '').trim();
       const videoList = rawVideoCell
